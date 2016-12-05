@@ -41,6 +41,7 @@ case $response in
     then
       rm /etc/profile.d/telegram.sh
     fi
+    mv telegram.sh /etc/profile.d/telegram.sh
     chmod a+x /etc/profile.d/telegram.sh
     ;;
   *)
@@ -81,15 +82,15 @@ read -r -p "Do you have webcam? [y/N] " response
 case $response in
   [yY][eE][sS]|[yY])
     echo "Move webcam file"
-    mv pluginDOC/webcam.sh /etc/telegram/pluginTXT/webcam.sh
+    mv pluginTXT/webcam.sh /etc/telegram/pluginTXT/webcam.sh
     echo "Remember to edit /etc/telegram/pluginTXT/webcam.sh file"
     ;;
   *)
     ;;
 esac
 
-mv pluginDOC/ping.sh /etc/telegram/pluginTXT/ping.sh
-mv pluginDOC/publicip.sh /etc/telegram/pluginTXT/publicip.sh
+mv pluginTXT/ping.sh /etc/telegram/pluginTXT/ping.sh
+mv pluginTXT/publicip.sh /etc/telegram/pluginTXT/publicip.sh
 
 cp bot.sh /etc/telegram/
 chmod a+x /etc/telegram/bot.sh

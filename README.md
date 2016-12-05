@@ -25,7 +25,7 @@ Extensible through **plugins**.
      sudo make install
      cd ..
 
-     cd heimdallr
+     cd homekeeper
      sudo chmod a+x build.sh
      sudo ./build.sh
-     sudo /etc/telegram//bot.sh &
+     sudo /etc/telegram/bot.sh &
