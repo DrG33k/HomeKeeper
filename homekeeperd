@@ -1,0 +1,69 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          homekeeperd
+# Required-Start:    $network $remote_fs $syslog
+# Required-Stop:     $network $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Provides information about server status.
+# Description:       Provides information about server status.
+### END INIT INFO
+
+# Set some variables
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
+DESC="Automation of your server and home with Telegram Bot"
+NAME=homekeeperd
+LOGFILE=/var/log/homekeeperd.log
+#DATE_EXEC="$(date "+%d %b %Y %H:%M")"
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+MYHOSTNAME=`hostname -f`
+MYUSER=`whoami`
+# Read configuration variable file if it is present
+#[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+    start)
+        if [ "$MYUSER" != "root" ]; then
+          echo "User has insufficient privilege."
+        else
+          if pgrep "bot.sh" > /dev/null
+          then
+            /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME Script already started."
+          else
+            /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME Script started."
+            /etc/telegram/bot.sh &
+          fi
+        fi
+    ;;
+    stop)
+        if [ "$MYUSER" != "root" ]; then
+          echo "User has insufficient privilege."
+        else
+          if pgrep "bot.sh" > /dev/null
+          then
+            killall bot.sh
+            /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME Script stopped."
+          else
+            /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME script not running."
+          fi
+        fi
+    ;;
+#    restart)
+#        /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME Script restarted."
+#    ;;
+    status)
+      if pgrep "bot.sh" > /dev/null
+      then
+        /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME script running."
+      else
+        /etc/telegram/broadcast.sh "%F0%9F%90%BE $MYHOSTNAME script not running."
+      fi
+    ;;
+    *)
+        N=/etc/init.d/$NAME
+        echo "Usage $NAME: $SCRIPTNAME {start|stop|restart|status}"
+        exit 1
+    ;;
+esac

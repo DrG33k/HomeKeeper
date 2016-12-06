@@ -1,9 +1,18 @@
 #!/bin/bash
+command -v jq >/dev/null 2>&1 || { echo >&2 "I require jq but it's not installed."; exit 1; }
+
+MYUSER=`whoami`
+if [ "$MYUSER" != "root" ]; then
+  echo "Use sudo ./build.sh"
+fi
+
 #Chiedo i due parametri di configurazione
-echo "Scegli una password che permettera' di diventare amministratore del bot, poi premi enter."
+echo "Choose a password, then press ENTER. Send it to the bot to begin administrator."
+echo "E.g. \"mypassword\""
 read LOGIN
 
-echo "Inserisci l'HASH completo del tuo bot, poi premi enter."
+echo "Insert the complete HASH, then press ENTER."
+echo "E.g. \"123456789:AAAA1-aB1cD2eF3gH4iL5mN6oP7qR8sT9uV\""
 read HASH
 
 # Creo e setto la cartella comune
@@ -33,16 +42,20 @@ echo "Set send.sh"
 mv send.sh /etc/telegram/send.sh
 chmod a+x /etc/telegram/send.sh
 
+mv homekeeperd /etc/init.d/homekeeperd
+chmod a+x /etc/init.d/homekeeperd
+update-rc.d homekeeperd defaults
+
 read -r -p "Do you want an alert on user login? [y/N] " response
 case $response in
   [yY][eE][sS]|[yY]) 
-    echo "Set telegram.sh"
-    if [ -f "/etc/profile.d/telegram.sh" ]
+    echo "Set homekeeper.sh"
+    if [ -f "/etc/profile.d/homekeeper.sh" ]
     then
-      rm /etc/profile.d/telegram.sh
+      rm /etc/profile.d/homekeeper.sh
     fi
-    mv telegram.sh /etc/profile.d/telegram.sh
-    chmod a+x /etc/profile.d/telegram.sh
+    mv telegram.sh /etc/profile.d/homekeeper.sh
+    chmod a+x /etc/profile.d/homekeeper.sh
     ;;
   *)
     ;;
