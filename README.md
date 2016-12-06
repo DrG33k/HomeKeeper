@@ -23,6 +23,7 @@ Extensible through **plugins**.
      ./configure --disable-maintainer-mode
      make
      sudo make install
+     sudo cp jq /usr/local/bin/
      cd ..
 
      cd homekeeper
